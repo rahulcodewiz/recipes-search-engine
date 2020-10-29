@@ -1,0 +1,8 @@
+setup.cfg
+setup.py
+app/__init__.py
+search_engine.egg-info/PKG-INFO
+search_engine.egg-info/SOURCES.txt
+search_engine.egg-info/dependency_links.txt
+search_engine.egg-info/requires.txt
+search_engine.egg-info/top_level.txt
