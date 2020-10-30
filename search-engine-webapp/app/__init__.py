@@ -1,14 +1,10 @@
-from flask import Flask
+from flask import Flask, redirect, url_for, render_template, request, flash
 import os
-def create_app(app_config=None):
-    app = Flask(__name__, instance_relative_config=True)
-    app.config.from_pyfile("config.py", silent=True)
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
+from flask import Flask, render_template
+app = Flask(__name__)
 
-    @app.route("/hello")
-    def hello():
-        return "Hello, World!"
-    return app
+@app.route('/')
+def home():
+   return render_template('index.html')
+if __name__ == '__main__':
+   app.run()
