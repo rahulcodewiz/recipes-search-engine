@@ -16,7 +16,7 @@ Please fork this repository and paste the github link of your fork on Microsoft 
     . venv/bin/activate
 
 ### Launch webapp
-    export FLASK_APP=search-engine
+    export FLASK_APP=app
     export FLASK_ENV=development
     flask run
 
