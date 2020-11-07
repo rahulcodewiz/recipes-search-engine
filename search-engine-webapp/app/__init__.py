@@ -5,12 +5,10 @@ from json2html import *
 import requests
 import json
 import os
-from elasticsearch import Elasticsearch
-
+from .search_service import *
 app = Flask(__name__)
 app.config.from_pyfile('setup.cfg', silent=True)
 
-es = Elasticsearch([{'host': 'localhost', 'port': '9200'}])
 @app.route('/')
 def home():
    return render_template('index.html')
@@ -24,14 +22,3 @@ def search():
 if __name__ == '__main__':
    app.run()
 
-
-def searchEs(term):
-   query = json.dumps({
-        "query": {
-            "match": {
-                "title": term
-            }
-        }
-    })
-   res = es.search(index="recipes_idx1", body=query)
-   return json2html.convert(json = res)

@@ -1,6 +1,13 @@
-GET recipes_idx / _count
+Install ES
+https://www.elastic.co/guide/en/elasticsearch/reference/current/install-elasticsearch.html
 
-GET recipes_idx / _search {
+Install Kibana:
+https://www.elastic.co/guide/en/kibana/current/install.html
+
+
+GET recipes_idx /_count
+
+GET recipes_idx/_search {
     "query": {
         "match": {
             "title": "cook"
@@ -34,6 +41,8 @@ GET recipes_idx / _search {
 
 
 DELETE recipes_idx
+
+
 
 PUT recipes_idx {
     "settings": {
