@@ -18,3 +18,8 @@ def searchEs(term):
     })
    res = es.search(index="recipes_idx1", body=query)
    return json2html.convert(json = res)
+
+
+
+def autosuggestES(query):
+   return es.search(index="recipes_idx1", body=query) 
