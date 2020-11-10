@@ -1,0 +1,184 @@
+
+**** Command to create index
+PUT recipes_idx
+{
+  "settings": {
+    "index": {
+      "analysis": {
+        "filter": {},
+        "analyzer": {
+          "keyword_analyzer": {
+            "filter": [
+              "lowercase",
+              "asciifolding",
+              "trim"
+            ],
+            "char_filter": [],
+            "type": "custom",
+            "tokenizer": "keyword"
+          },
+          "edge_ngram_analyzer": {
+            "filter": [
+              "lowercase"
+            ],
+            "tokenizer": "edge_ngram_tokenizer"
+          },
+          "edge_ngram_search_analyzer": {
+            "tokenizer": "lowercase"
+          }
+        },
+        "tokenizer": {
+          "edge_ngram_tokenizer": {
+            "type": "edge_ngram",
+            "min_gram": 2,
+            "max_gram": 5,
+            "token_chars": [
+              "letter"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "mappings": {
+      "properties": {
+        "name": {
+          "type": "text",
+          "fields": {
+            "keywordstring": {
+              "type": "text",
+              "analyzer": "keyword_analyzer"
+            },
+            "edgengram": {
+              "type": "text",
+              "analyzer": "edge_ngram_analyzer",
+              "search_analyzer": "edge_ngram_search_analyzer"
+            },
+            "completion": {
+              "type": "completion"
+            }
+          },
+          "analyzer": "standard"
+        }
+      }
+    }
+}
+
+
+GET recipes_idx /_count
+
+GET recipes_idx/_search {
+    "query": {
+        "match": {
+            "title": "cook"
+        }
+    }
+}
+
+POST recipes_idx / _delete_by_query {
+    "query": {
+        "match_all": {}
+    }
+}
+
+
+GET recipes_idx / _search
+
+POST recipes_idx / _analyze {
+    "analyzer": "my_stop_analyzer",
+    "text": "2 is a  the Quick Foxes."
+}
+
+PUT recipes_idx / _doc / 1 {
+    "title": "Ski resort"
+}
+
+GET recipes_idx / _search {
+    "query": {
+        "match_all": {}
+    }
+}
+
+
+DELETE recipes_idx
+
+
+
+PUT recipes_idx {
+    "settings": {
+        "analysis": {
+            "analyzer": {
+                "my_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "my_tokenizer",
+                    "filter": [
+                        "lowercase"
+                    ]
+                },
+                "my_stop_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "standard",
+                    "filter": [
+                        "lowercase",
+                        "english_stop"
+                    ]
+                }
+            },
+            "filter": {
+                "english_stop": {
+                    "type": "stop",
+                    "stopwords": "_english_"
+                }
+            },
+            "tokenizer": {
+                "my_tokenizer": {
+                    "type": "ngram",
+                    "min_gram": 3,
+                    "max_gram": 4,
+                    "token_chars": [
+                        "letter",
+                        "digit"
+                    ]
+                }
+            }
+        }
+    },
+    "mappings": {
+        "properties": {
+            "title": {
+                "type": "text",
+                "analyzer": "my_analyzer",
+                "search_analyzer": "my_stop_analyzer",
+                "search_quote_analyzer": "my_analyzer"
+            },
+            "ingredients": {
+                "type": "text",
+                "analyzer": "my_analyzer",
+                "search_analyzer": "my_stop_analyzer",
+                "search_quote_analyzer": "my_analyzer"
+            },
+            "instructions": {
+                "type": "text",
+                "analyzer": "my_analyzer",
+                "search_analyzer": "my_stop_analyzer",
+                "search_quote_analyzer": "my_analyzer"
+            }
+        }
+    }
+}
+
+
+
+PUT recipes_idx / _doc / rmK12UauntP510KeImX506H6Mr6jTu {
+    "title": "Slow Cooker Chicken and Dumplings",
+    "ingredients": [
+        "4 skinless, boneless chicken breast halves ADVERTISEMENT",
+        "2 tablespoons butter ADVERTISEMENT",
+        "2 (10.75 ounce) cans condensed cream of chicken soup ADVERTISEMENT",
+        "1 onion, finely diced ADVERTISEMENT",
+        "2 (10 ounce) packages refrigerated biscuit dough, torn into pieces ADVERTISEMENT",
+        "ADVERTISEMENT"
+    ],
+    "instructions": "Place the chicken, butter, soup, and onion in a slow cooker, and fill with enough water to cover.\nCover, and cook for 5 to 6 hours on High. About 30 minutes before serving, place the torn biscuit dough in the slow cooker. Cook until the dough is no longer raw in the center.\n",
+    "picture_link": "55lznCYBbs2mT8BTx6BTkLhynGHzM.S"
+}

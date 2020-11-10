@@ -22,4 +22,4 @@ def searchEs(term):
 
 
 def autosuggestES(query):
-   return es.search(index="recipes_idx1", body=query) 
+   return es.search(index="recipes_idx1", body=query)
