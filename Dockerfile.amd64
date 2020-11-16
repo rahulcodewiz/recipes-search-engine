@@ -24,7 +24,6 @@ RUN chmod -R 777 elasticsearch-7.10.0
 COPY batch batch/
 COPY dataset dataset/
 COPY es-setup es-setup/
-COPY dev dev/
 COPY CS410ProjectProposalFoodRecipeSearchEngine.pdf ./
 COPY search-engine-webapp search-engine-webapp/
 
