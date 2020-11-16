@@ -46,7 +46,7 @@ Please fork this repository and paste the github link of your fork on Microsoft 
     food_recipe_se                             latest                   72ab77c2a9b3        35 minutes ago      2.13GB
  
 
-### Run the docker container to trigger search engine (not final - need debugging)
+### Run the docker container to trigger search engine
 
     $docker run --net=host -p 5000:500 food_recipe_se
     
