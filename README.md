@@ -64,14 +64,14 @@ Please fork this repository and paste the github link of your fork on Microsoft 
 ### On your host machine open:
     http://127.0.0.1:5000
 
-### Known issues:
-    - Need to force kill the docker container to kill docker container "food_recipe_se"
-           How to kill:
-             - Open new command terminal 
-             - $docker ps -a  (need sudo acccess)
-             - Look for docker container with name "food_recipe_se" copy CONTAINER ID)
-             - $docker rm <CONTAINER ID>
+### Exit condition: Kill the (app) docker container 
+
+    How to kill the container:
+       - Open new command terminal 
+       - $docker ps -a  (need sudo acccess)
+       - Look for docker container with name "food_recipe_se" copy CONTAINER ID)
+       - $docker rm <CONTAINER ID>
 
 ## TODO: 
-     - Kaban shell script for index file generation is not considered currently
+     - Kibana shell script for index file generation is not considered currently
      - Once ready will be added to docker image exection
