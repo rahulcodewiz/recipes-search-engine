@@ -44,6 +44,10 @@ Please fork this repository and paste the github link of your fork on Microsoft 
     Should see something like below
     REPOSITORY                                 TAG                      IMAGE ID            CREATED             SIZE
     food_recipe_se                             latest                   72ab77c2a9b3        35 minutes ago      2.13GB
+
+    Troubleshooting "docker build" failure:
+     - Change Folder & File access permissions of project recipes-search-engine$ chmod -R 777 *
+     - Check if docker daemon is running https://docs.docker.com/config/daemon/
  
 
 ### Run the docker container to trigger search engine
