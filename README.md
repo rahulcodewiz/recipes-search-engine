@@ -48,7 +48,7 @@ Please fork this repository and paste the github link of your fork on Microsoft 
 
 ### Run the docker container to trigger search engine (not final - need debugging)
 
-    $docker run -p 127.0.0.1:5000:5000 food_recipe_se
+    $docker run --net=host -p 5000:500 food_recipe_se
     
      Expected output:
 
@@ -61,10 +61,11 @@ Please fork this repository and paste the github link of your fork on Microsoft 
      * Debugger is active!
      * Debugger PIN: 271-999-248
 
-### Known issues:
+### On your host machine open:
+    http://127.0.0.1:5000
 
-     - Page Not Found Error: when acessing http://127.0.0.1:5000 on host machine
-     - Need to force kill the docker container to kill docker container "food_recipe_se"
+### Known issues:
+    - Need to force kill the docker container to kill docker container "food_recipe_se"
            How to kill:
              - Open new command terminal 
              - $docker ps -a  (need sudo acccess)
