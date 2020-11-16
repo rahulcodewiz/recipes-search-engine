@@ -1,0 +1,49 @@
+FROM ubuntu:16.04
+
+WORKDIR /app
+ARG MY_ROOT=/app
+
+RUN apt-get update && apt-get install -y sudo --no-install-recommends apt-utils wget build-essential gcc make -y
+
+RUN apt-get update && apt-get install -y software-properties-common && add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && apt-get install -y python3.6 python3.6-dev python3-pip
+
+RUN ln -sfn /usr/bin/python3.6 /usr/bin/python3 && ln -sfn /usr/bin/python3 /usr/bin/python && ln -sfn /usr/bin/pip3 /usr/bin/pip
+
+RUN cd /app
+COPY requirements.txt ./
+RUN pip install -r requirements.txt
+
+RUN wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.0-linux-x86_64.tar.gz && \
+    wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.0-linux-x86_64.tar.gz.sha512 && \
+    shasum -a 512 -c elasticsearch-7.10.0-linux-x86_64.tar.gz.sha512  && \
+    tar -xzf elasticsearch-7.10.0-linux-x86_64.tar.gz
+
+RUN chmod -R 777 elasticsearch-7.10.0
+
+COPY batch batch/
+COPY dataset dataset/
+COPY es-setup es-setup/
+COPY dev dev/
+COPY CS410ProjectProposalFoodRecipeSearchEngine.pdf ./
+COPY search-engine-webapp search-engine-webapp/
+
+RUN cd search-engine-webapp
+RUN pip install -e search-engine-webapp/.
+
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y locales \
+    && sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
+    && dpkg-reconfigure --frontend=noninteractive locales \
+    && update-locale LANG=en_US.UTF-8
+ENV LANG en_US.UTF-8 
+ENV LC_ALL en_US.UTF-8
+
+RUN apt-get install curl -y
+
+RUN useradd -u 8877 UIUC
+USER UIUC
+
+EXPOSE 5000
+
+CMD [ "./search-engine-webapp/start_app.sh" ]
