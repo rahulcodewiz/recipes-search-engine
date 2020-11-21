@@ -1,7 +1,7 @@
 //Ready function when page is loaded
 $(document).ready(function() {
     //Autocomplete function
-    var autoCompleteDemo = function(query, cb) {
+    var autoComplete = function(query, cb) {
         var results = $.map([0], function() {
             //Get text from the input field
             var text = document.getElementById('typeahead').value;
@@ -50,7 +50,7 @@ $(document).ready(function() {
 
     $('.typeahead').typeahead(null, {
         displayKey: 'theValue',
-        source: autoCompleteDemo
+        source: autoComplete
     });
 
 });
