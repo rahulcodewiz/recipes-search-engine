@@ -7,6 +7,7 @@ import json
 import os
 from elasticsearch import Elasticsearch
 
+INDEX_NAME="recipes_idx1"
 es = Elasticsearch([{'host': 'localhost', 'port': '9200'}])
 def searchEs(term):
    query = json.dumps({
@@ -16,10 +17,10 @@ def searchEs(term):
             }
         }
     })
-   res = es.search(index="recipes_idx1", body=query)
+   res = es.search(index=INDEX_NAME, body=query)
    return json2html.convert(json = res)
 
 
 
 def autosuggestES(query):
-   return es.search(index="recipes_idx1", body=query)
+   return es.search(index=INDEX_NAME, body=query)

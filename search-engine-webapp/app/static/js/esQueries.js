@@ -20,7 +20,7 @@ $(document).ready(function() {
             //Ajax call to ES make sure this matches YOUR ES info
             var request = $.ajax({
                 type: "POST",
-                url: "http://localhost:9200/recipes_idx1/_search",
+                url: "/autosuggest",
                 async: false,
                 data: JSON.stringify(json),
                 contentType: "application/json; charset=utf-8",
