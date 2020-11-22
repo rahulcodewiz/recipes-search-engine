@@ -8,7 +8,7 @@ $(document).ready(function() {
             //ES Query
             var json = {
                 suggest: {
-                    text: text,
+                    text: text.split(" ").splice(-1),
                     recipes: {
                         term: {
                             field: "title"

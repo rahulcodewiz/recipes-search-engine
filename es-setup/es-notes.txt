@@ -65,7 +65,7 @@ PUT recipes_idx
 }
 
 
-GET recipes_idx /_count
+GET recipes_idx/_count
 
 GET recipes_idx/_search {
     "query": {
