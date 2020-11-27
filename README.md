@@ -50,6 +50,42 @@ Please fork this repository and paste the github link of your fork on Microsoft 
      - Check if docker daemon is running https://docs.docker.com/config/daemon/
  
 
+# Docker Process for Mac OS users. Skip to next step for other operating systems.
+
+    First, quit Docker by clicking on the Docker icon in the menu bar at the top of your screen. Select ‘Stop Docker’ from the drop-down menu.
+
+    Second, install the latest edge release from Docker (v2.5.1.0 or later): https://docs.docker.com/docker-for-mac/edge-release-notes/
+
+    Third, install jq:
+        Options: 
+            $brew install jq
+            $port install jq
+            Or: https://stedolan.github.io/jq/download/
+
+Fourth, setup jq to work with Docker SOCKS server:
+    $cd ~/Library/Group\ Containers/group.com.docker/
+    $mv settings.json settings.json.backup
+    $cat settings.json.backup | jq '.["socksProxyPort"]=8888' > settings.json
+
+Fifth, start Docker again:
+    $docker
+
+Sixth, enable SOCKS proxy:
+    - Navigate here: Apple menu -> System Preferences -> Network -> Proxies  
+    - Select the box next to ‘SOCKS proxy’
+    - Ensure SOCKS Proxy server reads ‘local host:8888’
+    -Ensure Bypass settings reads ‘*.local, 169.254.0.0/16, *.io’
+    -If Unselected, Select the box next to ‘Use Passive FTP Mode’
+    -Select “OK” then “APPLY” to confirm    changes
+
+Now you can run the Docker image:
+     $docker run -p 5000:5000 food_recipe_se
+
+NOTE: Your internet access will be disabled while you are running your proxy server. To restore your settings after testing the application, simply deselect the box next to ‘SOCKS Proxy’ in your Network settings, then click “OK” and “Apply” to confirm.
+
+Expected output should align with the next step. Simply paste the provided URL to your browser to test the application.
+
+
 ### Run the docker container to trigger search engine
 
      $docker run --net=host -p 5000:5000 food_recipe_se
@@ -74,6 +110,7 @@ Please fork this repository and paste the github link of your fork on Microsoft 
        - Open new command terminal 
        - $docker ps -a  (need sudo acccess)
        - Look for docker container with name "food_recipe_se" copy CONTAINER ID)
+       - $docker stop <CONTAINER ID>
        - $docker rm <CONTAINER ID>
 
 ## TODO: 
