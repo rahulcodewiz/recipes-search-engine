@@ -7,7 +7,13 @@ curl -X PUT "localhost:9200/recipes_idx1?pretty" -H 'Content-Type: application/j
   "settings": {
     "index": {
       "analysis": {
-        "filter": {},
+        "filter": {
+          "shingle": {
+            "type": "shingle",
+            "min_shingle_size": 2,
+            "max_shingle_size": 3
+          }
+        },
         "analyzer": {
           "keyword_analyzer": {
             "filter": [
@@ -27,6 +33,16 @@ curl -X PUT "localhost:9200/recipes_idx1?pretty" -H 'Content-Type: application/j
           },
           "edge_ngram_search_analyzer": {
             "tokenizer": "lowercase"
+          },
+          "trigram": {
+            "type": "custom",
+            "tokenizer": "standard",
+            "filter": ["lowercase","shingle"]
+          },
+          "reverse": {
+            "type": "custom",
+            "tokenizer": "standard",
+            "filter": ["lowercase","reverse"]
           }
         },
         "tokenizer": {
@@ -44,7 +60,7 @@ curl -X PUT "localhost:9200/recipes_idx1?pretty" -H 'Content-Type: application/j
   },
   "mappings": {
       "properties": {
-        "name": {
+        "title": {
           "type": "text",
           "fields": {
             "keywordstring": {
@@ -66,6 +82,80 @@ curl -X PUT "localhost:9200/recipes_idx1?pretty" -H 'Content-Type: application/j
     }
 }'
 
+
+PUT recipes_idx{
+  "settings": {
+    "index": {
+      "analysis": {
+        "filter": {
+          "shingle": {
+            "type": "shingle",
+            "min_shingle_size": 2,
+            "max_shingle_size": 3
+          }
+        },
+        "analyzer": {
+          "keyword_analyzer": {
+            "filter": [
+              "lowercase",
+              "asciifolding",
+              "trim", "title_ngram"
+            ],
+            "char_filter": [],
+            "type": "custom",
+            "tokenizer": "keyword"
+          },
+          "edge_ngram_analyzer": {
+            "filter": [
+              "lowercase"
+            ],
+            "tokenizer": "edge_ngram_tokenizer"
+          },
+          "edge_ngram_search_analyzer": {
+            "tokenizer": "lowercase"
+          },
+          "trigram": {
+            "type": "custom",
+            "tokenizer": "standard",
+            "filter": ["lowercase","shingle"]
+          },
+          "reverse": {
+            "type": "custom",
+            "tokenizer": "standard",
+            "filter": ["lowercase","reverse"]
+          }
+        },
+        "tokenizer": {
+          "edge_ngram_tokenizer": {
+            "type": "edge_ngram",
+            "min_gram": 2,
+            "max_gram": 5,
+            "token_chars": [
+              "letter"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "mappings": {
+      "properties": {
+        "title": {
+        "type": "text",
+        "fields": {
+          "trigram": {
+            "type": "text",
+            "analyzer": "trigram"
+          },
+          "reverse": {
+            "type": "text",
+            "analyzer": "reverse"
+          }
+        }
+      }
+      }
+    }
+}'
 
 GET recipes_idx/_count
 

@@ -7,21 +7,23 @@ import json
 import os
 from elasticsearch import Elasticsearch
 
-INDEX_NAME="recipes_idx1"
-es = Elasticsearch(['localhost','0.0.0.0'], port=9200)
+INDEX_NAME="recipes_idx"
+#es = Elasticsearch(['localhost','0.0.0.0'], port=9200)
+es = Elasticsearch([{'host': 'localhost', 'port': '9200'}])
 def searchEs(term):
-   query = json.dumps({
+   esQuery = json.dumps({
         "query": {
             "match": {
                 "title": term
             }
         }
     })
-   res = es.search(index=INDEX_NAME, body=query)
+   print("Search Query:",esQuery)
+   res = es.search(index=INDEX_NAME, body=esQuery)
    return json2html.convert(json = res)
 
 
-def autosuggestES(query):
+def autosuggestTerm(query):
     esquery = json.dumps({
                 "suggest": {
                     "text": query,
@@ -32,7 +34,32 @@ def autosuggestES(query):
                     }
                 }
             })
-    print(query)
+    print("Search Query:",esquery)
     suggestRes= es.search(index=INDEX_NAME, body=esquery)
+    print(suggestRes)
+    return suggestRes
+
+def autosuggestPhrase(query):
+    esQuery=json.dumps({
+    "suggest": {
+        "text": query,
+        "recipes": {
+        "phrase": {
+            "field": "title.trigram",
+            "size": 4,
+            "gram_size": 3,
+            "direct_generator": [ {
+            "field": "title.trigram",
+            "suggest_mode": "always"
+            } ],
+            "highlight": {
+            "pre_tag": "<em>",
+            "post_tag": "</em>"
+            }
+        }
+        }
+        }
+        })
+    suggestRes= es.search(index=INDEX_NAME, body=esQuery)
     print(suggestRes)
     return suggestRes
