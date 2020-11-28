@@ -20,7 +20,8 @@ def search():
 
 @app.route('/autosuggest' , methods=['POST'])
 def autosuggest():
-   return autosuggestES(request.data)
+   reqData = request.data
+   return autosuggestES(reqData)
 
 if __name__ == '__main__':
    app.run()

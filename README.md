@@ -52,7 +52,7 @@ Please fork this repository and paste the github link of your fork on Microsoft 
 
 ### Run the docker container to trigger search engine
 
-     $docker run --net=host -p 5000:5000 food_recipe_se
+     $docker run --net=host -p 5000:5000 -p 9200:9200 food_recipe_se
     
      Expected output:
 

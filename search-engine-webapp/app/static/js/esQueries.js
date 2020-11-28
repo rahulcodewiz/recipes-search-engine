@@ -4,26 +4,13 @@ $(document).ready(function() {
     var autoComplete = function(query, cb) {
         var results = $.map([0], function() {
             //Get text from the input field
-            var text = document.getElementById('typeahead').value;
-            //ES Query
-            var json = {
-                suggest: {
-                    text: text.split(" ").splice(-1),
-                    recipes: {
-                        term: {
-                            field: "title"
-                        }
-                    }
-                }
-            };
-
-            //Ajax call to ES make sure this matches YOUR ES info
+            var searchQuery = document.getElementById('typeahead').value;
             var request = $.ajax({
                 type: "POST",
                 url: "/autosuggest",
                 async: false,
-                data: JSON.stringify(json),
-                contentType: "application/json; charset=utf-8",
+                data: searchQuery,
+                contentType: "text/plain; charset=utf-8",
                 dataType: "json",
                 success: function(data) {
                     return (data);

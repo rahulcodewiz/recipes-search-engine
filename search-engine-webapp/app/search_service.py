@@ -8,7 +8,7 @@ import os
 from elasticsearch import Elasticsearch
 
 INDEX_NAME="recipes_idx1"
-es = Elasticsearch([{'host': 'localhost', 'port': '9200'}])
+es = Elasticsearch(['localhost','0.0.0.0'], port=9200)
 def searchEs(term):
    query = json.dumps({
         "query": {
@@ -21,6 +21,18 @@ def searchEs(term):
    return json2html.convert(json = res)
 
 
-
 def autosuggestES(query):
-   return es.search(index=INDEX_NAME, body=query)
+    esquery = json.dumps({
+                "suggest": {
+                    "text": query,
+                    "recipes": {
+                        "term": {
+                            "field": "title"
+                            }
+                    }
+                }
+            })
+    print(query)
+    suggestRes= es.search(index=INDEX_NAME, body=esquery)
+    print(suggestRes)
+    return suggestRes

@@ -14,18 +14,22 @@ RUN cd /app
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 
+#Insall ElasticSearch and copy config 
+
 RUN wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.0-linux-x86_64.tar.gz && \
     wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.0-linux-x86_64.tar.gz.sha512 && \
     shasum -a 512 -c elasticsearch-7.10.0-linux-x86_64.tar.gz.sha512  && \
     tar -xzf elasticsearch-7.10.0-linux-x86_64.tar.gz
 
 RUN chmod -R 777 elasticsearch-7.10.0
+COPY es-setup/elasticsearch.yml elasticsearch-7.10.0/conf/.
 
 COPY batch batch/
 COPY dataset dataset/
 COPY es-setup es-setup/
 COPY CS410ProjectProposalFoodRecipeSearchEngine.pdf ./
 COPY search-engine-webapp search-engine-webapp/
+
 
 RUN cd search-engine-webapp
 RUN pip install -e search-engine-webapp/.

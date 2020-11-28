@@ -1,6 +1,8 @@
 
 **** Command to create index
-PUT recipes_idx
+
+curl -X PUT "localhost:9200/my-index-000001?pretty"
+curl -X PUT "localhost:9200/recipes_idx1?pretty" -H 'Content-Type: application/json' -d'
 {
   "settings": {
     "index": {
@@ -11,7 +13,7 @@ PUT recipes_idx
             "filter": [
               "lowercase",
               "asciifolding",
-              "trim"
+              "trim", "title_ngram"
             ],
             "char_filter": [],
             "type": "custom",
@@ -62,7 +64,7 @@ PUT recipes_idx
         }
       }
     }
-}
+}'
 
 
 GET recipes_idx/_count
@@ -169,8 +171,8 @@ PUT recipes_idx {
 
 
 
-PUT recipes_idx / _doc / rmK12UauntP510KeImX506H6Mr6jTu {
-    "title": "Slow Cooker Chicken and Dumplings",
+curl -X PUT "localhost:9200/recipes_idx1?pretty" -H 'Content-Type: application/json' -d'
+{    "title": "Slow Cooker Chicken and Dumplings",
     "ingredients": [
         "4 skinless, boneless chicken breast halves ADVERTISEMENT",
         "2 tablespoons butter ADVERTISEMENT",
