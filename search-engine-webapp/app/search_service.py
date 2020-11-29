@@ -60,6 +60,7 @@ def autosuggestPhrase(query):
         }
         }
         })
+    print("Search Query:",esQuery)
     suggestRes= es.search(index=INDEX_NAME, body=esQuery)
     print(suggestRes)
     return suggestRes
