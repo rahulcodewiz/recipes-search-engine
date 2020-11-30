@@ -1,0 +1,89 @@
+{
+    "settings": {
+        "index": {
+            "analysis": {
+                "filter": {
+                    "shingle": {
+                        "type": "shingle",
+                        "min_shingle_size": 2,
+                        "max_shingle_size": 3
+                    }
+                },
+                "analyzer": {
+                    "keyword_analyzer": {
+                        "filter": [
+                            "lowercase",
+                            "asciifolding",
+                            "trim"
+                        ],
+                        "char_filter": [],
+                        "type": "custom",
+                        "tokenizer": "keyword"
+                    },
+                    "edge_ngram_analyzer": {
+                        "filter": [
+                            "lowercase"
+                        ],
+                        "tokenizer": "edge_ngram_tokenizer"
+                    },
+                    "edge_ngram_search_analyzer": {
+                        "tokenizer": "lowercase"
+                    },
+                    "trigram": {
+                        "type": "custom",
+                        "tokenizer": "standard",
+                        "filter": ["lowercase", "shingle"]
+                    },
+                    "reverse": {
+                        "type": "custom",
+                        "tokenizer": "standard",
+                        "filter": ["lowercase", "reverse"]
+                    }
+                },
+                "tokenizer": {
+                    "edge_ngram_tokenizer": {
+                        "type": "edge_ngram",
+                        "min_gram": 2,
+                        "max_gram": 5,
+                        "token_chars": [
+                            "letter"
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "mappings": {
+        "properties": {
+            "title": {
+                "type": "text",
+                "fields": {
+                    "trigram": {
+                        "type": "text",
+                        "analyzer": "trigram"
+                    },
+                    "reverse": {
+                        "type": "text",
+                        "analyzer": "reverse"
+                    },
+                    "suggest": {
+                        "type": "completion"
+                    },
+                    "completion": {
+                        "type": "completion"
+                    },
+                    "keywordstring": {
+                        "type": "text",
+                        "analyzer": "keyword_analyzer"
+                    },
+                    "edgengram": {
+                        "type": "text",
+                        "analyzer": "edge_ngram_analyzer",
+                        "search_analyzer": "edge_ngram_search_analyzer"
+                    }
+                },
+                "analyzer": "standard"
+            }
+        }
+    }
+}
