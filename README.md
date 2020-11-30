@@ -113,6 +113,11 @@ Expected output should align with the next step. Simply paste the provided URL t
        - $docker stop <CONTAINER ID>
        - $docker rm <CONTAINER ID>
 
-## TODO: 
-     - Kibana shell script for index file generation is not considered currently
-     - Once ready will be added to docker image exection
+## Trigger data load manually
+
+-  Launch docker shell
+-  trigger loader script
+    
+```python
+    python /app/batch/es_data_loader.py
+```
