@@ -43,6 +43,9 @@ for doc in data_vec:
             res = es.index(index=ES_INDEX,id=key,body=row)
             if res["result"] == 'created':
                 docs_indexed += 1
+                if docs_indexed % 1000 == 0:
+                    print(f'      * {docs_indexed} documents indexed.')
+
             
 #user output
 print(f'{docs_indexed} documents successfully indexed in {ES_INDEX} index.')
