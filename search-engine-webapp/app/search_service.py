@@ -7,6 +7,8 @@ import json
 import os
 from elasticsearch import Elasticsearch
 
+default_query_terms = ['meat']
+
 INDEX_NAME="recipes_idx"
 #es = Elasticsearch(['localhost','0.0.0.0'], port=9200)
 es = Elasticsearch([{'host': 'localhost', 'port': '9200'}])
@@ -22,6 +24,40 @@ def searchEs(term):
    res = es.search(index=INDEX_NAME, body=esQuery)
    return json2html.convert(json = res)
 
+def userProfileParser(user_idx):
+   
+   #Ex profile: in /app/user-profile/user1.json
+   up_json_file = str("user"+str(user_idx)+".json")
+   profile_ = os.path.join("/app/search-engine-webapp/user-profile", up_json_file)
+
+   with open(profile_) as f:
+     data = json.load(f)
+     print("user data", data)
+  
+   if data['food']['interest']:
+     t_ = data['food']['interest']
+     terms = t_.split()
+   else:
+     return None
+   return terms
+
+def recommenderSystem(user_idx):
+     terms = userProfileParser(user_idx)
+     if not terms:
+        terms = default_query_terms
+
+     res = []
+     for term in terms:
+       esQuery = json.dumps({
+           "query": {
+               "match": {
+                  "title": term
+              }
+          }
+       })
+       print("Search Query:",esQuery)
+       res.append(es.search(index=INDEX_NAME, body=esQuery))
+     print("Recommendations: ", res)
 
 def autosuggestTerm(query):
     esquery = json.dumps({
