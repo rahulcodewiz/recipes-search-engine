@@ -9,13 +9,15 @@ from .search_service import *
 app = Flask(__name__)
 app.config.from_pyfile('setup.cfg', silent=True)
 
+USER_IDX = 1
+
 @app.route('/')
 def home():
    return render_template('index.html')
 
-
 @app.route('/search' , methods=['POST'])
 def search():
+   recommenderSystem(USER_IDX)
    return searchEs(request.form['recipesText'])
 
 @app.route('/autosuggest' , methods=['POST'])
