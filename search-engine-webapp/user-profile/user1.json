@@ -1,0 +1,21 @@
+{
+  "details": [
+    {
+      "personal": {
+        "id": "1", 
+	"name": "user1",
+	"gender":"male",
+	"age":"27",
+        "occupation": "Software Engineer"
+      }, 
+      "type": "meat lover"
+    }
+  ], 
+  "location": {
+    "id": "1", 
+    "country": "India"
+  },
+  "food":{
+     "interest":"chicken fish panner masala"
+  }
+}
