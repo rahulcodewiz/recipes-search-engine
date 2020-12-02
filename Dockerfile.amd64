@@ -30,6 +30,9 @@ COPY es-setup es-setup/
 COPY CS410ProjectProposalFoodRecipeSearchEngine.pdf ./
 COPY search-engine-webapp search-engine-webapp/
 
+#RUN elasticsearch-7.10.0/bin/elasticsearch
+#Add logic once ES is up start load or trigger load script manually by launching docker vm
+#RUN python batch/es_data_loader.py
 
 RUN cd search-engine-webapp
 RUN pip install -e search-engine-webapp/.
@@ -43,10 +46,12 @@ ENV LANG en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
 
 RUN apt-get install curl -y
+RUN apt-get install vim -y
 
 RUN useradd -u 8877 UIUC
 USER UIUC
 
 EXPOSE 5000
+EXPOSE 9200
 
 CMD [ "./search-engine-webapp/start_app.sh" ]

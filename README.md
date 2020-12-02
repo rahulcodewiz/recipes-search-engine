@@ -5,7 +5,9 @@ Please fork this repository and paste the github link of your fork on Microsoft 
 ------
 ## Installation guide
 
-### Docker installation
+    Scroll down for Mac instructions. Windows not supported.
+
+### (Linux) Docker installation
 
     Follow instructions from https://docs.docker.com/get-docker/ select download based on your host machine OS 
 
@@ -31,7 +33,7 @@ Please fork this repository and paste the github link of your fork on Microsoft 
         -v, --version            Print version information and quit
 
 
-### Instruction to Build docker image with ElasticSearch and application
+### (Linux) Instruction to Build docker image with ElasticSearch and application
    
     After successful installation of Docker, next step is to build the docker container image with ElasticSearch and application
 
@@ -49,44 +51,7 @@ Please fork this repository and paste the github link of your fork on Microsoft 
      - Change Folder & File access permissions of project recipes-search-engine$ chmod -R 777 *
      - Check if docker daemon is running https://docs.docker.com/config/daemon/
  
-
-# Docker Process for Mac OS users. Skip to next step for other operating systems.
-
-    First, quit Docker by clicking on the Docker icon in the menu bar at the top of your screen. Select ‘Stop Docker’ from the drop-down menu.
-
-    Second, install the latest edge release from Docker (v2.5.1.0 or later): https://docs.docker.com/docker-for-mac/edge-release-notes/
-
-    Third, install jq:
-        Options: 
-            $brew install jq
-            $port install jq
-            Or: https://stedolan.github.io/jq/download/
-
-Fourth, setup jq to work with Docker SOCKS server:
-    $cd ~/Library/Group\ Containers/group.com.docker/
-    $mv settings.json settings.json.backup
-    $cat settings.json.backup | jq '.["socksProxyPort"]=8888' > settings.json
-
-Fifth, start Docker again:
-    $docker
-
-Sixth, enable SOCKS proxy:
-    - Navigate here: Apple menu -> System Preferences -> Network -> Proxies  
-    - Select the box next to ‘SOCKS proxy’
-    - Ensure SOCKS Proxy server reads ‘local host:8888’
-    -Ensure Bypass settings reads ‘*.local, 169.254.0.0/16, *.io’
-    -If Unselected, Select the box next to ‘Use Passive FTP Mode’
-    -Select “OK” then “APPLY” to confirm    changes
-
-Now you can run the Docker image:
-     $docker run -p 5000:5000 food_recipe_se
-
-NOTE: Your internet access will be disabled while you are running your proxy server. To restore your settings after testing the application, simply deselect the box next to ‘SOCKS Proxy’ in your Network settings, then click “OK” and “Apply” to confirm.
-
-Expected output should align with the next step. Simply paste the provided URL to your browser to test the application.
-
-
-### Run the docker container to trigger search engine
+ ### (Linux) Run the docker container to trigger search engine
 
      $docker run --net=host -p 5000:5000 -p 9200:9200 food_recipe_se
     
@@ -101,10 +66,130 @@ Expected output should align with the next step. Simply paste the provided URL t
      * Debugger is active!
      * Debugger PIN: 271-999-248
 
-### On your host machine open:
+### (Linux) Launch ingest script:
+
+    TODO: @Pradeep please verify this is the correct command
+
+    Open a new terminal window
+        $docker ps -a  (need sudo acccess)
+        
+        Identify and copy <container ID> for food_recipe_se, then run
+        $ docker run <container ID> bash
+
+    In the container shell run:
+        $ python /app/batch/es_data_loader.py  
+
+        NOTE: If you receive connection error, retry again in 30-60 seconds 
+
+    Expected output (may take several minutes to complete ingestion):
+
+        ****Load begins****
+        **Loading now: /app/dataset/recipes_raw_nosource_ar.json
+                * 1000 documents successfully indexed in recipes_id index.
+                ...
+                ...
+        39802 documents successfully indexed in recipes_idx index.
+
+### (Linux) On your host machine open:
     http://127.0.0.1:5000
 
-### Exit condition: Kill the (app) docker container 
+    Paste url into browser to begin testing the application
+
+### (Mac) Docker Desktop for Mac download instructions and configurations
+
+    Install the latest edge release from Docker (v2.5.1.0 or later): 
+        https://docs.docker.com/docker-for-mac/edge-release-notes/
+
+    Install jq. Options: 
+        $brew install jq
+        $port install jq
+        Or: https://stedolan.github.io/jq/download/
+
+    Setup jq to work with Docker SOCKS server:
+        $cd ~/Library/Group\ Containers/group.com.docker/
+        $mv settings.json settings.json.backup
+        $cat settings.json.backup | jq '.["socksProxyPort"]=8888' > settings.json
+
+    Enable SOCKS proxy:
+        System Preferences -> Network -> Advanced -> Proxies  
+        Select the box next to ‘SOCKS proxy’
+        Ensure SOCKS Proxy server reads ‘local host:8888’
+        Ensure Bypass settings reads ‘*.local, 169.254.0.0/16, *.io’
+        If Unselected, Select the box next to ‘Use Passive FTP Mode’
+        Select “OK” then “APPLY”
+
+        NOTE: 
+        Internet access may be disabled while you running your proxy server. 
+        To restore your settings after testing the application:
+            * Deselect the box next to ‘SOCKS Proxy’ in your Network settings
+            * Select “OK” and “Apply”
+
+    Start Docker Desktop for Mac application:
+        'commmand' + 'space' and type 'Docker.app' then launch
+        The blue whale Docker icon should appear in the apple menu bar
+            * Select the icon and ensure green status: 'Docker Desktop is Running'
+
+    Verify Expiramental features in Docker Desktop for Mac:
+        Docker.app -> Preferences -> Expiramental Features
+            * Ensure all features are enabled
+
+### (Mac) Build the Docker image
+
+    Navigate to project directory 'recipes-search-engine' in terminal.
+    Enter command to build the Docker image:
+        $ docker build -f Dockerfile.amd64 -t food_recipe_se .
+
+        Expected output (may take a few minutes to complete):
+            Building ...
+            ...
+            ...
+            naming to docker.io/library/food_recipe_se
+
+### (Mac) Run the Docker image
+
+    Run the Docker image:
+        $docker run -p 5000:5000 food_recipe_se
+
+        Expected output:
+            Starting Elastic Server
+             * Serving Flask app "app" (lazy loading)
+             * Environment: development
+             * Debug mode: on
+             * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+             * Restarting with stat
+             * Debugger is active!
+             * Debugger PIN: 544-260-012
+
+### (Mac) Launch ingest script:
+
+    Docker.app -> Dashboard -> Containers/Apps
+        Next to the running food_recipe_se image, select "CLI" icon.
+        
+    This will open a terminal window fromn inside the Docker image. 
+        
+    Recommend closing unused applications to speed up ingestion
+
+    In the container shell:
+        $python /app/batch/es_data_loader.py
+
+        NOTE: If you receive connection error, retry again in 30-60 seconds 
+
+    Expected output (may take several minutes to complete ingestion):
+
+        ****Load begins****
+        **Loading now: /app/dataset/recipes_raw_nosource_ar.json
+                * 1000 documents successfully indexed in recipes_id index.
+                ...
+                ...
+        39802 documents successfully indexed in recipes_idx index.
+
+
+### (Mac) On your host machine open:
+    http://127.0.0.1:5000
+
+    Paste url into browser to begin testing the application
+
+### (Linux/Mac) Exit condition: Kill the (app) docker container 
 
     How to kill the container:
        - Open new command terminal 
@@ -112,7 +197,3 @@ Expected output should align with the next step. Simply paste the provided URL t
        - Look for docker container with name "food_recipe_se" copy CONTAINER ID)
        - $docker stop <CONTAINER ID>
        - $docker rm <CONTAINER ID>
-
-## TODO: 
-     - Kibana shell script for index file generation is not considered currently
-     - Once ready will be added to docker image exection
