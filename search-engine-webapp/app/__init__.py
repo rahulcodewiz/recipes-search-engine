@@ -15,11 +15,12 @@ USER_IDX = 1
 def home():
    return render_template('index.html')
 
-#TODO(Jon) test recommend call 
-@app.route('/search' , methods=['POST'])
+#TODO(Jon) test for correct JS render
+@app.route('/recommend' , methods=['POST'])
 def recommend():
    return searchEs(recommenderSystem(USER_IDX))
 
+#TODO(Jon) test for corret JS render
 @app.route('/search' , methods=['POST'])
 def search():
    return searchEs(request.form['recipesText'])

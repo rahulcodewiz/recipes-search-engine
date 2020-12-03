@@ -20,9 +20,10 @@ def searchEs(term):
                 }
             }
         })
-    print("Search Query:",esQuery)
+    #print("Search Query:",esQuery)
     res = es.search(index=INDEX_NAME, body=esQuery)
-    return json2html.convert(json = res)
+    return res
+    #return json2html.convert(json = res)
 
 def userProfileParser(user_idx):
    
