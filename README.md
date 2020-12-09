@@ -185,7 +185,7 @@ Please fork this repository and paste the github link of your fork on Microsoft 
 
 
 ### (Mac) On your host machine open:
-    http://127.0.0.1:5000
+    http://0.0.0.0:5000/
 
     Paste url into browser to begin testing the application
 
