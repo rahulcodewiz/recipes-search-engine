@@ -7,21 +7,63 @@ import json
 import os
 from elasticsearch import Elasticsearch
 
+default_query_terms = ['meat']
+
 INDEX_NAME="recipes_idx"
 #es = Elasticsearch(['localhost','0.0.0.0'], port=9200)
 es = Elasticsearch([{'host': 'localhost', 'port': '9200'}])
 def searchEs(term):
-   esQuery = json.dumps({
-        "query": {
-            "match": {
-                "title": term
+    esQuery = json.dumps({
+            "query": {
+                "match": {
+                    "title": term
+                }
             }
-        }
-    })
-   print("Search Query:",esQuery)
-   res = es.search(index=INDEX_NAME, body=esQuery)
-   return json2html.convert(json = res)
+        })
+    #print("Search Query:",esQuery)
+    res = es.search(index=INDEX_NAME, body=esQuery)
+    return res
+    #return json2html.convert(json = res)
 
+def userProfileParser(user_idx):
+   
+    #Ex profile: in /app/user-profile/user1.json
+    up_json_file = str("user"+str(user_idx)+".json")
+    profile_ = os.path.join("/app/search-engine-webapp/user-profile", up_json_file)
+
+    with open(profile_) as f:
+        data = json.load(f)
+        #print("user data", data)
+    
+    if data['food']['interest']:
+        t_ = data['food']['interest']
+        terms = t_.split()
+    else:
+        return None
+    return terms
+
+def recommenderSystem(user_idx):
+    terms = userProfileParser(user_idx)
+    if not terms:
+        terms = default_query_terms
+
+    #Extract username from profile
+    with open(profile_) as f:
+        data = json.load(f)
+        user_name = data['name']
+
+    res = []
+    for term in terms:
+        esQuery = json.dumps({
+            "query": {
+                "match": {
+                    "title": term
+                }
+            }
+        })
+    print(f"{user_name}, since you like {data}, here are some recommended recipes:" , esQuery)
+    res = es.search(index=INDEX_NAME, body=esQuery)
+    return json2html.convert(json = res)
 
 def autosuggestTerm(query):
     esquery = json.dumps({
