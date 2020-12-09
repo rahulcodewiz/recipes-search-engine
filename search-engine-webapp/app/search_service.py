@@ -12,16 +12,18 @@ default_query_terms = ['meat']
 INDEX_NAME="recipes_idx"
 #es = Elasticsearch(['localhost','0.0.0.0'], port=9200)
 es = Elasticsearch([{'host': 'localhost', 'port': '9200'}])
-def searchEs(term):
+def searchEs(query):
+    queryStr = str(query,'utf-8')   
     esQuery = json.dumps({
             "query": {
                 "match": {
-                    "title": term
+                    "title": queryStr
                 }
             }
         })
     #print("Search Query:",esQuery)
     res = es.search(index=INDEX_NAME, body=esQuery)
+    print("Search result:",res)
     return res
     #return json2html.convert(json = res)
 

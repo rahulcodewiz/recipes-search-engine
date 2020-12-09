@@ -12,8 +12,9 @@
     <script src="../static/js/typehead.bundle-0.10.0.min.js"></script>
     <script src="../static/js/esQueries.js"></script>
     <!-- CSS -->
-    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
     <link href="../static/css/indexCSS.css" rel="stylesheet">
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+
 
 </head>
 
@@ -24,27 +25,30 @@
     <!--Typeahead & Search bar -->
     <center>
         <div class="demo">
-            <form action="{{ url_for('search') }}" method="post">
-                <input id="typeahead" name="recipesText" class="typeahead" type="text" placeholder="try it out">
-                <input id='query' type="submit" value="Search">
-            </form>
+            <!--<form action="{{ url_for('search') }}" method="post">-->
+            <input id="typeahead" name="recipesText" class="typeahead" type="text" placeholder="try it out">
+            <input id='query' type="submit" value="Search">
+            <!--</form>-->
         </div>
 
     </center>
+
     <!--Search results -->
+
+    <div id="searchResults"></div>
     <!--TODO(Jon) display ESresults same page-->
     <div height="100px"> </div>
     <center>
-    <h3 id=link1></h3>
-    <h3 id=link2></h3>
-    <h3 id=link3></h3>
-    <h3 id=link4></h3>
-    <h3 id=link5></h3>
-    <h3 id=link6></h3>
-    <h3 id=link7></h3>
-    <h3 id=link8></h3>
-    <h3 id=link9></h3>
-    <h3 id=link10></h3>
+        <h3 id=link1></h3>
+        <h3 id=link2></h3>
+        <h3 id=link3></h3>
+        <h3 id=link4></h3>
+        <h3 id=link5></h3>
+        <h3 id=link6></h3>
+        <h3 id=link7></h3>
+        <h3 id=link8></h3>
+        <h3 id=link9></h3>
+        <h3 id=link10></h3>
     </center>
 </body>
 
