@@ -1,6 +1,11 @@
 /* Some styling */
 
-.table {
+#searchResults {
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+#searchResults table {
     border-collapse: collapse;
     margin: 25px 0;
     font-size: 0.9em;
@@ -9,19 +14,27 @@
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
-.table tbody tr {
-    border-bottom: 1px solid #dddddd;
+#searchResults table td {
+    text-align: left;
+    vertical-align: top;
+    width: 400px;
+    overflow: hidden;
 }
 
-.table tbody tr:nth-of-type(even) {
+#searchResults table tbody tr {
+    border-bottom: 1px solid #dddddd;
+    text-align: center;
+}
+
+#searchResults table tbody tr:nth-of-type(even) {
     background-color: #f3f3f3;
 }
 
-.table tbody tr:last-of-type {
+#searchResults table tbody tr:last-of-type {
     border-bottom: 2px solid #009879;
 }
 
-.table tbody tr.active-row {
+#searchResults table tbody tr.active-row {
     font-weight: bold;
     color: #009879;
 }

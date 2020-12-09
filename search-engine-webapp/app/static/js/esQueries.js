@@ -39,29 +39,34 @@ $(document).ready(function() {
             var title = document.createElement('th');
             title.appendChild(document.createTextNode("Title"));
             row.appendChild(title);
-            var instructions = document.createElement('th');
-            instructions.appendChild(document.createTextNode("Instructions"));
-            row.appendChild(instructions);
             var ingredients = document.createElement('th');
             ingredients.appendChild(document.createTextNode("Ingredients"));
             row.appendChild(ingredients);
+            var instructions = document.createElement('th');
+            instructions.appendChild(document.createTextNode("Instructions"));
+            row.appendChild(instructions);
             table.appendChild(row);
 
             //Table Body
             var tableBody = document.createElement('tbody');
             esDocs.hits.hits.forEach(function(rowData) {
                 source = rowData._source
+                hlTitle = rowData.highlight.title
                 var row = document.createElement('tr');
+
                 var title = document.createElement('td');
-                title.appendChild(document.createTextNode(source.title));
+                var titleDiv = document.createElement('div');
+                titleDiv.innerHTML = hlTitle[0];
+                //titleDiv = titleDiv.firstChild;
+                title.appendChild(titleDiv)
                 row.appendChild(title);
-                var instructions = document.createElement('td');
-                instructions.appendChild(document.createTextNode(source.instructions));
-                row.appendChild(instructions);
                 var ingredients = document.createElement('td');
                 ingredients.appendChild(document.createTextNode(source.ingredients));
                 row.appendChild(ingredients);
                 tableBody.appendChild(row);
+                var instructions = document.createElement('td');
+                instructions.appendChild(document.createTextNode(source.instructions));
+                row.appendChild(instructions);
             });
 
             table.appendChild(tableBody);
