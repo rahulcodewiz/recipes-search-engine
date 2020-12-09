@@ -9,14 +9,21 @@ from .search_service import *
 app = Flask(__name__)
 app.config.from_pyfile('setup.cfg', silent=True)
 
+USER_IDX = 1
+
 @app.route('/')
 def home():
    return render_template('index.html')
 
+#TODO(Jon) test for correct JS render
+@app.route('/recommend' , methods=['POST'])
+def recommend():
+   return searchEs(recommenderSystem(USER_IDX))
 
+#TODO(Jon) test for corret JS render
 @app.route('/search' , methods=['POST'])
 def search():
-   return searchEs(request.form['recipesText'])
+   return searchEs(request.data)
 
 @app.route('/autosuggest' , methods=['POST'])
 def autosuggest():
