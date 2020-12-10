@@ -82,121 +82,198 @@ curl -X PUT "localhost:9200/recipes_idx1?pretty" -H 'Content-Type: application/j
     }
 }'
 
-
-PUT recipes_idx{
-  "settings": {
-    "index": {
-      "analysis": {
-        "filter": {
-          "shingle": {
-            "type": "shingle",
-            "min_shingle_size": 2,
-            "max_shingle_size": 3
-          }
-        },
-        "analyzer": {
-          "keyword_analyzer": {
-            "filter": [
-              "lowercase",
-              "asciifolding",
-              "trim", "title_ngram"
-            ],
-            "char_filter": [],
-            "type": "custom",
-            "tokenizer": "keyword"
-          },
-          "edge_ngram_analyzer": {
-            "filter": [
-              "lowercase"
-            ],
-            "tokenizer": "edge_ngram_tokenizer"
-          },
-          "edge_ngram_search_analyzer": {
-            "tokenizer": "lowercase"
-          },
-          "trigram": {
-            "type": "custom",
-            "tokenizer": "standard",
-            "filter": ["lowercase","shingle"]
-          },
-          "reverse": {
-            "type": "custom",
-            "tokenizer": "standard",
-            "filter": ["lowercase","reverse"]
-          }
-        },
-        "tokenizer": {
-          "edge_ngram_tokenizer": {
-            "type": "edge_ngram",
-            "min_gram": 2,
-            "max_gram": 5,
-            "token_chars": [
-              "letter"
-            ]
-          }
-        }
-      }
+GET recipes_idx/_count
+{
+  
+  
+}
+POST recipes_idx/_search
+{
+  "query": {
+    "match": {
+      "title": "butter pneer"
     }
   },
-  "mappings": {
-      "properties": {
-        "title": {
-        "type": "text",
-        "fields": {
-          "trigram": {
-            "type": "text",
-            "analyzer": "trigram"
-          },
-          "reverse": {
-            "type": "text",
-            "analyzer": "reverse"
+    "highlight" : {
+        "fields" : {
+            "title" : {}
+        }
+    }
+}
+
+GET recipes_idx1/_settings
+
+GET _all
+
+GET recipes_idx1/_search
+{
+  "suggest": {
+    "text": "panee",
+    "recipes": {
+      "term": {
+        "field": "title"
+      }
+    }
+  }
+}
+
+POST recipes_idx/_search
+{
+  "query": {
+    "fuzzy": {
+      "title": "paneer",
+      "fuzziness": "AUTO"
+    }
+  }
+}
+
+GET recipes_idx/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "multi_match": {
+            "query": "paneer butter",
+            "fields": [
+              "title^6",
+              "ingredients^2.5",
+              "instructions^1.5"
+            ],
+            "type": "bool_prefix",
+            "operator": "and",
+            "fuzziness": "2"
           }
         }
-      }
+      ]
+    }
+  }
+}
+
+POST recipes_idx/_search
+{
+  "query": {
+    "fuzzy": {
+      "title": {
+        "value": "paneer masala",
+        "fuzziness": "AUTO",
+        "max_expansions": 50,
+        "prefix_length": 0,
+        "transpositions": true,
+        "rewrite": "constant_score"
       }
     }
-}'
+  }
+}
 
-GET recipes_idx/_count
+GET recipes_idx/_search
+{"query":
+{
+  "span_near": {
+    "clauses": [
+      {
+        "span_multi": {
+          "match": {
+            "fuzzy": {
+              "content": {
+                "fuzziness": "2",
+                "value": "word"
+              }
+            }
+          }
+        }
+      },
+      {
+        "span_multi": {
+          "match": {
+            "fuzzy": {
+              "content": {
+                "fuzziness": "2",
+                "value": "another"
+              }
+            }
+          }
+        }
+      }                   
+    ],
+    "slop": 1,
+    "in_order": "true"
+}
+}
 
-GET recipes_idx/_search {
+POST recipes_idx/_search
+{
     "query": {
-        "match": {
-            "title": "cook"
+        "function_score": {
+            "query": {
+                "multi_match": {
+                    "query": "paneer",
+                    "type": "phrase_prefix",
+                    "fields": [
+                        "title^6", 
+                        "ingredients^2.5", 
+                        "instructions^1.5"
+                    ],
+                    "fuzziness" : "AUTO",
+                    "prefix_length" : 2
+
+                }
+            }
         }
     }
 }
 
-POST recipes_idx / _delete_by_query {
-    "query": {
+
+POST recipes_idx/_search
+{
+  "suggest": {
+    "text" : "cooke",
+    "my-suggest-1" : {
+      "term" : {
+        "field" : "title"
+      }
+    }
+  }
+}
+
+GET recipes_idx/_search
+{
+  "query": {
+    "match": {
+      "title": "cook" 
+    }
+  }
+}
+
+POST recipes_idx/_delete_by_query
+{
+    "query": { 
         "match_all": {}
     }
 }
 
 
-GET recipes_idx / _search
+GET recipes_idx1/_settings
 
-POST recipes_idx / _analyze {
-    "analyzer": "my_stop_analyzer",
-    "text": "2 is a  the Quick Foxes."
+
+
+PUT recipes_idx/_doc/1
+{
+  "title": "Ski resort"
 }
 
-PUT recipes_idx / _doc / 1 {
-    "title": "Ski resort"
-}
-
-GET recipes_idx / _search {
-    "query": {
-        "match_all": {}
+GET recipes_idx/_search
+{
+    "query" : {
+        "match_all" : {}
     }
 }
 
 
 DELETE recipes_idx
 
-
-
-PUT recipes_idx {
+PUT recipes_idx 
+{
     "settings": {
         "analysis": {
             "analyzer": {
@@ -237,6 +314,9 @@ PUT recipes_idx {
     },
     "mappings": {
         "properties": {
+          "suggest": {
+        "type": "completion"
+      },
             "title": {
                 "type": "text",
                 "analyzer": "my_analyzer",
@@ -261,22 +341,71 @@ PUT recipes_idx {
 
 
 
-curl -X PUT "localhost:9200/recipes_idx1?pretty" -H 'Content-Type: application/json' -d'
-{    "title": "Slow Cooker Chicken and Dumplings",
-    "ingredients": [
-        "4 skinless, boneless chicken breast halves ADVERTISEMENT",
-        "2 tablespoons butter ADVERTISEMENT",
-        "2 (10.75 ounce) cans condensed cream of chicken soup ADVERTISEMENT",
-        "1 onion, finely diced ADVERTISEMENT",
-        "2 (10 ounce) packages refrigerated biscuit dough, torn into pieces ADVERTISEMENT",
-        "ADVERTISEMENT"
-    ],
-    "instructions": "Place the chicken, butter, soup, and onion in a slow cooker, and fill with enough water to cover.\nCover, and cook for 5 to 6 hours on High. About 30 minutes before serving, place the torn biscuit dough in the slow cooker. Cook until the dough is no longer raw in the center.\n",
-    "picture_link": "55lznCYBbs2mT8BTx6BTkLhynGHzM.S"
+PUT recipes_idx1
+{
+  "settings": {
+    "index": {
+      "analysis": {
+        "filter": {},
+        "analyzer": {
+          "keyword_analyzer": {
+            "filter": [
+              "lowercase",
+              "asciifolding",
+              "trim"
+            ],
+            "char_filter": [],
+            "type": "custom",
+            "tokenizer": "keyword"
+          },
+          "edge_ngram_analyzer": {
+            "filter": [
+              "lowercase"
+            ],
+            "tokenizer": "edge_ngram_tokenizer"
+          },
+          "edge_ngram_search_analyzer": {
+            "tokenizer": "lowercase"
+          }
+        },
+        "tokenizer": {
+          "edge_ngram_tokenizer": {
+            "type": "edge_ngram",
+            "min_gram": 2,
+            "max_gram": 5,
+            "token_chars": [
+              "letter"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "mappings": {
+      "properties": {
+        "title": {
+          "type": "text",
+          "fields": {
+            "keywordstring": {
+              "type": "text",
+              "analyzer": "keyword_analyzer"
+            },
+            "edgengram": {
+              "type": "text",
+              "analyzer": "edge_ngram_analyzer",
+              "search_analyzer": "edge_ngram_search_analyzer"
+            },
+            "completion": {
+              "type": "completion"
+            }
+          },
+          "analyzer": "standard"
+        }
+      }
+    }
 }
 
-
-PUT recipes_idx
+PUT recipes_idx4
 {
   "settings": {
     "index": {
@@ -345,11 +474,120 @@ PUT recipes_idx
             "type": "text",
             "analyzer": "reverse"
           },
-          "suggest": {
-        "type": "completion"
-      }
-        }
+        "suggest": {
+            "type": "completion"
+          },
+         "completion": {
+            "type": "completion"
+          },
+           "keywordstring": {
+              "type": "text",
+              "analyzer": "keyword_analyzer"
+            },
+            "edgengram": {
+              "type": "text",
+              "analyzer": "edge_ngram_analyzer",
+              "search_analyzer": "edge_ngram_search_analyzer"
+            }
+        },"analyzer": "standard"
       }
       }
     }
 }
+
+
+POST recipes_idx3/_search?pretty
+{
+  "suggest": {
+    "song-suggest": {
+      "prefix": "Chicken and",        
+      "completion": {         
+          "field": "title.trigram"
+      }
+    }
+  }
+}
+
+
+GET recipes_idx3/_search
+{
+  "suggest": {
+    "text": "Cooker",
+    "recipes": {
+      "term": {
+        "field": "title"
+      }
+    }
+  }
+}
+
+PUT music
+{
+  "mappings": {
+    "properties": {
+      "suggest": {
+        "type": "completion"
+      },
+      "title": {
+        "type": "keyword"
+      }
+    }
+  }
+}
+
+POST recipes_idx/_analyze
+{
+  "analyzer": "reverse",
+  "text": "chicken 23"
+}
+
+
+POST music/_search
+{
+  "_source": "suggest",     
+  "suggest": {
+    "song-suggest": {
+      "prefix": "nir",
+      "completion": {
+        "field": "suggest", 
+        "size": 5           
+      }
+    }
+  }
+}
+
+
+
+
+GET recipes_idx3/_search
+{
+  "suggest": {
+    "text": "Slow Cook",
+    "simple_phrase": {
+      "phrase": {
+        "field": "title.completion",
+        "highlight": {
+          "pre_tag": "<em>",
+          "post_tag": "</em>"
+        }
+      }
+    }
+  }
+}
+
+PUT recipes_idx4/_doc/rmK12UauntP510KeImX506H6Mr6jTu
+{
+    "title": "Slow Cooker Chicken and Dumplings",
+    "ingredients": [
+      "4 skinless, boneless chicken breast halves ADVERTISEMENT",
+      "2 tablespoons butter ADVERTISEMENT",
+      "2 (10.75 ounce) cans condensed cream of chicken soup ADVERTISEMENT",
+      "1 onion, finely diced ADVERTISEMENT",
+      "2 (10 ounce) packages refrigerated biscuit dough, torn into pieces ADVERTISEMENT",
+      "ADVERTISEMENT"
+    ],
+    "instructions": "Place the chicken, butter, soup, and onion in a slow cooker, and fill with enough water to cover.\nCover, and cook for 5 to 6 hours on High. About 30 minutes before serving, place the torn biscuit dough in the slow cooker. Cook until the dough is no longer raw in the center.\n",
+    "picture_link": "55lznCYBbs2mT8BTx6BTkLhynGHzM.S"
+  }
+  
+  GET recipes_idx1/_mapping
