@@ -23,7 +23,7 @@ def recommend():
 #TODO(Jon) test for corret JS render
 @app.route('/search' , methods=['POST'])
 def search():
-   return searchEs(request.form['recipesText'])
+   return searchEs(request.data)
 
 @app.route('/autosuggest' , methods=['POST'])
 def autosuggest():

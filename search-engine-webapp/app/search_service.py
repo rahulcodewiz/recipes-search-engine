@@ -12,16 +12,27 @@ default_query_terms = ['meat']
 INDEX_NAME="recipes_idx"
 #es = Elasticsearch(['localhost','0.0.0.0'], port=9200)
 es = Elasticsearch([{'host': 'localhost', 'port': '9200'}])
-def searchEs(term):
+def searchEs(query):
+
+    queryStr = str(query,'utf-8')  
+    formatQuery(queryStr) 
     esQuery = json.dumps({
             "query": {
                 "match": {
-                    "title": term
+                    "title": queryStr
                 }
+            },
+                "highlight" : {
+                        "pre_tags" : ["<mark>"],
+    "post_tags" : ["</mark>"],
+        "fields" : {
+            "title" : {}
+        }
             }
         })
-    #print("Search Query:",esQuery)
+    print("Search Query:",esQuery)
     res = es.search(index=INDEX_NAME, body=esQuery)
+    print("Search result:",res)
     return res
     #return json2html.convert(json = res)
 
@@ -106,3 +117,23 @@ def autosuggestPhrase(query):
     suggestRes= es.search(index=INDEX_NAME, body=esQuery)
     print(suggestRes)
     return suggestRes
+
+def formatQuery(searchquery):
+    import json
+    import pprint
+    from collections import defaultdict
+    nested_dict = lambda: defaultdict(nested_dict)
+    query=nested_dict()
+    query['span_near']['clauses']=list()
+    query['slop']='1'
+    query['in_order']="true"
+    words=searchquery.split()
+    for w in words:
+        nest = nested_dict()
+        nest["span_multi"]["match"]["fuzzy"]["msg"]["fuzziness"]["value"]=w
+        nest["span_multi"]["match"]["fuzzy"]["msg"]["fuzziness"]["fuzziness"]="1"
+        json.dumps(nest)
+        query['span_near']['clauses'].append(json.loads(json.dumps(nest)))
+
+
+    pprint.pprint(json.loads(json.dumps(query)))

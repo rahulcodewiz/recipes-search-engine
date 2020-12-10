@@ -180,12 +180,12 @@ Please fork this repository and paste the github link of your fork on Microsoft 
         **Loading now: /app/dataset/recipes_raw_nosource_ar.json
                 * 1000 documents successfully indexed in recipes_id index.
                 ...
-                ...
-        39802 documents successfully indexed in recipes_idx index.
+                * 65000 documents indexed.
+        65125 documents successfully indexed in recipes_idx index.
 
 
 ### (Mac) On your host machine open:
-    http://127.0.0.1:5000
+    http://0.0.0.0:5000/
 
     Paste url into browser to begin testing the application
 
