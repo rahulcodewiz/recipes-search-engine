@@ -3,11 +3,15 @@
 Please fork this repository and paste the github link of your fork on Microsoft CMT. Detailed instructions are on Coursera under Week 1: Course Project Overview/Week 9 Activities.
 
 ------
-## Installation guide
+## Installation guide for Ubuntu and Mac Users as given below (make sure you are not behind any proxy/firewall to test this project)
 
-    Scroll down for Mac instructions. Windows not supported.
 
-### (Linux) Docker installation
+### Video Tutorial (Ubuntu): Build Docker Image, Generate Index file and running food recipe search engine web app
+
+    https://www.youtube.com/watch?v=FooQHpTv63I
+
+
+### Docker installation
 
     Follow instructions from https://docs.docker.com/get-docker/ select download based on your host machine OS 
 
