@@ -1,0 +1,7 @@
+nltk_stopwords.txt  https://www.nltk.org/book/ch02.html, 'english' stopwords: (lines 1-127)
+
+recipes_raw_nosource_ar.json   https://eightportions.com/datasets/Recipes/#fn:1  2018, https://github.com/rtlee9/recipe-box/blob/master/LICENSE
+
+recipes_raw_nonsource_epi.json  https://eightportions.com/datasets/Recipes/#fn:1    2018, https://github.com/rtlee9/recipe-box/blob/master/LICENSE
+
+
