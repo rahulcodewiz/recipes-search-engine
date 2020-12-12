@@ -5,6 +5,8 @@ Please fork this repository and paste the github link of your fork on Microsoft 
 ------
 ## Installation guide for Ubuntu and Mac Users as given below (make sure you are not behind any proxy/firewall to test this project)
 
+$git clone https://github.com/Jon-LaFlamme/CourseProject.git
+
 
 ### Video Tutorial (Ubuntu): Build Docker Image, Generate Index file and running food recipe search engine web app
 
@@ -103,6 +105,10 @@ Please fork this repository and paste the github link of your fork on Microsoft 
     http://0.0.0.0:5000
 
     Paste url into browser to begin testing the application
+
+### (Mac) ideo Tutorial Build Docker Image, Run Docker Image, Generate Index file
+
+    https://youtu.be/pEuqzOdScEQ
 
 ### (Mac) Docker Desktop for Mac download instructions and configurations
 
