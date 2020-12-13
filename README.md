@@ -1,13 +1,19 @@
-# CourseProject
+# FOOD RECIPE SEARCH ENGINE USING ELASTICSEARCH, PYTHON AND FLASK
 
 Please fork this repository and paste the github link of your fork on Microsoft CMT. Detailed instructions are on Coursera under Week 1: Course Project Overview/Week 9 Activities.
 
 ------
-## Installation guide
+## Installation guide for Ubuntu and Mac Users as given below (make sure you are not behind any proxy/firewall to test this project)
 
-    Scroll down for Mac instructions. Windows not supported.
+$git clone https://github.com/Jon-LaFlamme/CourseProject.git
 
-### (Linux) Docker installation
+
+### Video Tutorial (Ubuntu): Build Docker Image, Generate Index file and running food recipe search engine web app
+
+    https://www.youtube.com/watch?v=FooQHpTv63I
+
+
+### Docker installation
 
     Follow instructions from https://docs.docker.com/get-docker/ select download based on your host machine OS 
 
@@ -53,7 +59,7 @@ Please fork this repository and paste the github link of your fork on Microsoft 
  
  ### (Linux) Run the docker container to trigger search engine
 
-     $docker run --net=host -p 5000:5000 -p 9200:9200 food_recipe_se
+     $docker run --net=host -p 5000:5000 food_recipe_se
     
      Expected output:
 
@@ -61,23 +67,28 @@ Please fork this repository and paste the github link of your fork on Microsoft 
      * Serving Flask app "app" (lazy loading)
      * Environment: development
      * Debug mode: on
-     * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+     * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
      * Restarting with stat
      * Debugger is active!
      * Debugger PIN: 271-999-248
 
-### (Linux) Launch ingest script:
+     **IMP NOTE**: Before launching search engine web app and start searching for food recipes
+                   user needs to follow below steps to generate index file 
 
-    TODO: @Pradeep please verify this is the correct command
+### (Linux) Launch ingest script:
 
     Open a new terminal window
         $docker ps -a  (need sudo acccess)
         
         Identify and copy <container ID> for food_recipe_se, then run
-        $ docker run <container ID> bash
+        $ docker run -it --net=host -p 5000:5000  <container image name ex: food_recipe_se used to build the docker image> bash
+        
+        Output docker shell will look like below
+        WARNING: Published ports are discarded when using host network mode
+        UIUC@node01:/app$ 
 
     In the container shell run:
-        $ python /app/batch/es_data_loader.py  
+        UIUC@node01:/app$ python batch/es_data_loader.py  
 
         NOTE: If you receive connection error, retry again in 30-60 seconds 
 
@@ -88,12 +99,16 @@ Please fork this repository and paste the github link of your fork on Microsoft 
                 * 1000 documents successfully indexed in recipes_id index.
                 ...
                 ...
-        39802 documents successfully indexed in recipes_idx index.
+                * 65000 documents successfully indexed in recipes_idx index.
 
 ### (Linux) On your host machine open:
-    http://127.0.0.1:5000
+    http://0.0.0.0:5000
 
     Paste url into browser to begin testing the application
+
+### (Mac) ideo Tutorial Build Docker Image, Run Docker Image, Generate Index file
+
+    https://youtu.be/pEuqzOdScEQ
 
 ### (Mac) Docker Desktop for Mac download instructions and configurations
 
